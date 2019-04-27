@@ -1,0 +1,44 @@
+zookeeper runs at 2181 port
+kafka 9092
+
+kakfka http://archive.apache.org/dist/kafka/0.10.1.0/kafka_2.11-0.10.1.0.tgz
+bin/zookeeper-server-start.sh config/zookeeper.properties
+bin/kafka-server-start.sh  config/server.properties
+kafka-topics.sh --create --zookeeper localhost:2181 --replication-factor 1 --partitions 2 --topic topictest1     
+bin/kafka-topics.sh --list --zookeeper localhost:2181                                    
+kafka-console-producer.sh --broker-list localhost:9092 --topic topictest1
+bin/kafka-console-consumer.sh --bootstrap-server localhost:9092 --topic topictest1 --from-beginning
+
+three main properties of config/server-properties
+broker.id 
+port
+log.dirs (main data dir of broker)
+
+zookeeper.connect
+delete.topics.enable
+auto.create.topics.enable
+default.replication.factor
+num.partitions
+log.retention.ms
+log.retention.bytes
+
+
+Consumer
+kafka-console-consumer.sh --bootstrap-server kafka-0.kafka-svc.glp-uat.svc.cluster.local:9093 --topic autobahn-course-registration-created-new_Topic --from-beginning
+kafka-console-consumer  --bootstrap-server glp-speed-kafka-kafka:9092 --topic lec-glp-course-created_Topic --from-beginning
+kafka-console-consumer.sh --bootstrap-server kafka-0.kafka-svc.glp-qa.svc.cluster.local:9093 --topic lec_glp_section_created_ims_Topic --from-beginning
+kafka-console-consumer.sh --bootstrap-server localhost:9092 --topic autobahn-course-registration-created-new_Topic --from-beginning --consumer-property group.id=GROUP-LAD-AUTOBAHN-EVENT
+kafka-console-consumer.sh --bootstrap-server kafka-qa-kafka:9092 --topic lec-glp-section-created-ims_Topic  --from-beginning
+
+Producer:
+kafka-console-producer.sh --broker-list  kafka-qa-kafka:9092 --topicautobahn-course-registration-created-new_Topic
+
+Group:
+kafka-consumer-groups --bootstrap-server  kafka-qa-kafka:9092 --describe --group GROUP-LAD-AUTOBAHN-EVENT
+
+Topic:
+kafka-topics.sh --zookeeper zkex-0.zkex-svc.glp-uat.svc.cluster.local:2181 --list | grep autobahn-course-registration-created-new
+kafka-topics.sh --zookeeper zookeeper.demo-internal.com:2181 --list
+kafka-topics.sh --zookeeper zookeeper.stage-internal.com:2181 --delete --topic AutoBahnISCTopicPro-LCD-Service_Topic
+bin/kafka-topics.sh --zookeeper zkex-0.zkex-svc.glp-uat.svc.cluster.local:2181 --describe  --topic autobahn-course-registration-created-new_Topic
+bin/kafka-topics.sh --zookeeper 127.0.0.1:2181 --create --topic someTopic --partitions 10 --replication-factor 3
